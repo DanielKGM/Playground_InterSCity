@@ -1,58 +1,160 @@
-from services.api_client import APIClient
-from models.resource import Resource
-from models.capability import Capability
+import streamlit as st
+from utils.fetch_cached_data import request
+from typing import Dict
+from utils.http_container import http_container
+from utils.fetch_cached_data import request
 
 
-class CatalogService:
-    def __init__(self):
-        self.api_client = APIClient()
+class CataloguerService():
+    def __init__(self, lista_capacidades: list = None):
+        self.lista_capacidades = lista_capacidades if lista_capacidades is not None else []
+        self.action_map = {
+            "Criar um recurso": {
+                "endpoint": "/catalog/resources",
+                "method": "POST",
+                "data": self.resource_fields,
+            },
+            "Obter um recurso": {
+                "endpoint": "/catalog/resources/{uuid}",
+                "method": "GET",
+                "path_param": "UUID",
+            },
+            "Atualizar um recurso": {
+                "endpoint": "/catalog/resources/{uuid}",
+                "method": "PUT",
+                "path_param": "UUID",
+                "data": self.resource_fields
+            },
+            "Listar todos os recursos": {
+                "endpoint": "/catalog/resources",
+                "method": "GET",
+            },
+            "Listar recursos com sensores": {
+                "endpoint": "/catalog/resources/sensors",
+                "method": "GET",
+            },
+            "Listar recursos com atuadores": {
+                "endpoint": "/catalog/resources/actuators",
+                "method": "GET",
+            },
+            "Pesquisar recursos": {
+                "endpoint": "/catalog/resources/search",
+                "method": "GET",
+                "params": self.search_fields,
+            },
+            "Criar uma capacidade": {
+                "endpoint": "/catalog/capabilities",
+                "method": "POST",
+                "data": self.capability_fields
+            },
+            "Excluir uma capacidade": {
+                "endpoint": "/catalog/capabilities/{nome}",
+                "method": "DELETE",
+                "path_param": "Nome",
+            },
+            "Obter uma capacidade": {
+                "endpoint": "/catalog/capabilities/{nome}",
+                "method": "GET",
+                "path_param": "Nome",
+            },
+            "Atualizar uma capacidade": {
+                "endpoint": "/catalog/capabilities/{nome}",
+                "method": "PUT",
+                "path_param": "Nome",
+            },
+            "Listar todas as capacidades": {
+                "endpoint": "/catalog/capabilities",
+                "method": "GET",
+            }
+        }
 
-    def create_resource(self, data: dict) -> Resource:
-        data = {"data":data}
-        json_response = self.api_client.request(method="POST", endpoint="/catalog/resources", data=data, first=True)
-        return Resource.model_validate(json_response)
 
-    def list_resources(self, params: dict = None) -> list[Resource]:
-        json_response = self.api_client.request(method="GET", endpoint="/catalog/resources", params=params, first=True)
-        return [Resource.model_validate(item) for item in json_response]
+    def remove_empty_fields(self, data: Dict) -> Dict:
+        return {key: value for key, value in data.items() if value not in [0, None, "", [], {}]}
+    
+    def capability_fields(self):
+        return self.remove_empty_fields({
+            "name": st.text_input("Nome", placeholder="Sensor de temperatura"),
+            "capability_type": st.selectbox("Tipo", ['sensor', 'actuator'],help="Sensor: sente o ambiente; Actuador: modifica o ambiente"),
+            "description": st.text_input("Descrição", placeholder= "Mede a temperatura da sala")
+        })
+    
+    def resource_fields(self):
+        col1, col2 = st.columns(2)
 
-    def list_sensors(self) -> list[Resource]:
-        json_response = self.api_client.request(method="GET", endpoint="/catalog/resources/sensors",first=True)
-        return [Resource.model_validate(item) for item in json_response]
+        with col1:
+            description = st.text_input("Descrição", placeholder= "Estacionamento em São Luís", help= "Uma descrição curta do recurso")
+            lat = st.number_input("Latitude", format="%.6f")
+            collect_interval = st.number_input("Intervalo de Coleta (segundos)", min_value=0,help= "Valor numérico, em segundos, que corresponde ao intervalo de coleta de dados")
 
-    def list_actuators(self) -> list[Resource]:
-        json_response = self.api_client.request(method="GET", endpoint="/catalog/resources/actuators", first=True)
-        return [Resource.model_validate(item) for item in json_response]
+        with col2:
+            status = st.selectbox("Status", ['active', 'inactive'])
+            lon = st.number_input("Longitude", format="%.6f")
+            uri = st.text_input("URI", placeholder= "exemplo.com", help="Unified Resource Identifier")
 
-    def search_resources(self, query: dict) -> list[Resource]:
-        json_response = self.api_client.request(method="GET", endpoint="/catalog/resources/search", params=query, first=True)
-        return [Resource.model_validate(item) for item in json_response]
+        return {"data": self.remove_empty_fields({
+            "uri": uri,
+            "lat": lat,
+            "lon": lon,
+            "status": status,
+            "collect_interval": collect_interval,
+            "description": description,
+            "capabilities": st.multiselect("Capacidades", 
+                                           self.lista_capacidades,
+                                           placeholder= "Escolha uma opção")
+        })}
+    
+    def search_fields(self):
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            capability = st.multiselect("Capacidades", 
+                        self.lista_capacidades,
+                        placeholder= "Escolha uma opção")
+            lat = st.number_input("Latitude", format="%.6f")
+            postal_code = st.text_input("Código Postal", help="Formato: XXXXX-XXX", placeholder="XXXXX-XXX")
+            neighborhood = st.text_input("Bairro")
+        
+        with col2:
+            status = st.selectbox("Status", [None,'active', 'inactive'])
+            lon = st.number_input("Longitude", format="%.6f")
+            city = st.text_input("Cidade")
+            radius = st.number_input("Raio (em metros)", min_value=0)
 
-    def get_resource(self, uuid: str) -> Resource:
-        json_response = self.api_client.request(method="GET", endpoint=f"/catalog/resources/{uuid}", first=True)
-        return Resource.model_validate(json_response)
+        return self.remove_empty_fields({
+            "capability": capability,
+            "status": status,
+            "postal_code": postal_code,
+            "neighborhood": neighborhood,
+            "city": city,
+            "lat": lat,
+            "lon": lon,
+            "radius": radius,
+        })
 
-    def update_resource(self, uuid: str, data: dict) -> Resource:
-        data = {"data":data}
-        json_response = self.api_client.request(method="PUT", endpoint=f"/catalog/resources/{uuid}", data=data, first=True)
-        return Resource.model_validate(json_response)
+    def form(self, key: str):
+        action_name = st.selectbox(
+            "Escolha um tipo de requisição",
+            self.action_map.keys(),
+        )
 
-    def update_capability(self, name: str, data: dict) -> Capability:
-        json_response = self.api_client.request(method="PATCH", endpoint=f"/catalog/capabilities/{name}", data=data)
-        return Capability.model_validate(json_response)
+        action = self.action_map[action_name]
+        http_cont = st.html(http_container(action["method"], action["endpoint"]))
 
-    def create_capability(self, data: dict) -> Capability:
-        json_response = self.api_client.request(method="POST", endpoint="/catalog/capabilities", data=data)
-        return Capability.model_validate(json_response)
+        with st.form(key, border= False, enter_to_submit= False):
+            path_param = None
+            if action.get("path_param"):
+                path_param = st.text_input(action["path_param"])
+            data = action["data"]() if action.get("data") else None
+            params = action["params"]() if action.get("params") else None
 
-    def list_capabilities(self) -> list[Capability]:
-        json_response = self.api_client.request(method="GET", endpoint="/catalog/capabilities", first=True)
-        return [Capability.model_validate(item) for item in json_response]
-
-    def get_capability(self, name: str) -> Capability:
-        json_response = self.api_client.request(method="GET", endpoint=f"/catalog/capabilities/{name}")
-        return Capability.model_validate(json_response)
-
-    def delete_capability(self, name: str) -> dict:
-        json_response = self.api_client.request(method="DELETE", endpoint=f"/catalog/capabilities/{name}")
-        return json_response
+            if st.form_submit_button("Enviar ╰┈➤",use_container_width= True):
+                http_cont.html(http_container(action["method"],action["endpoint"],data, params))
+                st.toast("Comunicando-se com a API...", icon= ":material/hourglass_empty:")
+                response = request(action["method"],action["endpoint"], path_param, params, data)
+                if response.get("error"):
+                    st.toast(f'{response["error"]} ({response["status_code"]})', icon=":material/sentiment_dissatisfied:")
+                else:
+                    st.toast("Requisição concluída com sucesso!", icon= ":material/sentiment_satisfied:")
+                return response
+        return None
