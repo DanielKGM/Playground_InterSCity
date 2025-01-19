@@ -17,12 +17,12 @@ class CataloguerService():
             "Obter um recurso": {
                 "endpoint": "/catalog/resources/{uuid}",
                 "method": "GET",
-                "path_param": "UUID",
+                "path_param": "{uuid} do recurso",
             },
             "Atualizar um recurso": {
                 "endpoint": "/catalog/resources/{uuid}",
                 "method": "PUT",
-                "path_param": "UUID",
+                "path_param": "{uuid} do recurso",
                 "data": self.resource_fields
             },
             "Listar todos os recursos": {
@@ -50,17 +50,18 @@ class CataloguerService():
             "Excluir uma capacidade": {
                 "endpoint": "/catalog/capabilities/{nome}",
                 "method": "DELETE",
-                "path_param": "Nome",
+                "path_param": "{nome} da capacidade",
             },
             "Obter uma capacidade": {
                 "endpoint": "/catalog/capabilities/{nome}",
                 "method": "GET",
-                "path_param": "Nome",
+                "path_param": "{nome} da capacidade",
             },
             "Atualizar uma capacidade": {
                 "endpoint": "/catalog/capabilities/{nome}",
                 "method": "PUT",
-                "path_param": "Nome",
+                "path_param": "{nome} da capacidade",
+                "params": self.capability_fields
             },
             "Listar todas as capacidades": {
                 "endpoint": "/catalog/capabilities",
@@ -72,10 +73,10 @@ class CataloguerService():
     def remove_empty_fields(self, data: Dict) -> Dict:
         return {key: value for key, value in data.items() if value not in [0, None, "", [], {}]}
     
-    def capability_fields(self):
+    def capability_fields(self, edit: bool = False):
         return self.remove_empty_fields({
             "name": st.text_input("Nome", placeholder="Sensor de temperatura"),
-            "capability_type": st.selectbox("Tipo", ['sensor', 'actuator'],help="Sensor: sente o ambiente; Actuador: modifica o ambiente"),
+            "capability_type": st.selectbox("Tipo", ['sensor', 'actuator'],help="Sensor: sente o ambiente; Actuador: modifica o ambiente", disabled= edit),
             "description": st.text_input("Descrição", placeholder= "Mede a temperatura da sala")
         })
     
@@ -88,11 +89,11 @@ class CataloguerService():
             collect_interval = st.number_input("Intervalo de Coleta (segundos)", min_value=0,help= "Valor numérico, em segundos, que corresponde ao intervalo de coleta de dados")
 
         with col2:
-            status = st.selectbox("Status", ['active', 'inactive'])
+            status = st.selectbox("Status", ['active', 'inactive', None])
             lon = st.number_input("Longitude", format="%.6f")
             uri = st.text_input("URI", placeholder= "exemplo.com", help="Unified Resource Identifier")
 
-        return {"data": self.remove_empty_fields({
+        return {"data" : self.remove_empty_fields({
             "uri": uri,
             "lat": lat,
             "lon": lon,
@@ -149,9 +150,18 @@ class CataloguerService():
             params = action["params"]() if action.get("params") else None
 
             if st.form_submit_button("Enviar ╰┈➤",use_container_width= True):
-                http_cont.html(http_container(action["method"],action["endpoint"],data, params))
                 st.toast("Comunicando-se com a API...", icon= ":material/hourglass_empty:")
-                response = request(action["method"],action["endpoint"], path_param, params, data)
+
+                response = request(
+                                action["method"],
+                                action["endpoint"], 
+                                path_param, 
+                                params, 
+                                data,
+                                {"Content-Type": "application/json"}
+                            )
+                http_cont.html(http_container(action["method"],action["endpoint"],data, params))
+                
                 if response.get("error"):
                     st.toast(f'{response["error"]} ({response["status_code"]})', icon=":material/sentiment_dissatisfied:")
                 else:

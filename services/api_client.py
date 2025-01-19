@@ -4,6 +4,7 @@ import re
 from enum import Enum
 
 
+
 class APIClient:
     def __init__(self, base_url: str = 'https://cidadesinteligentes.lsdi.ufma.br/interscity_lh'):
         self.base_url = base_url
@@ -29,7 +30,7 @@ class APIClient:
         path_param: str = None,
         params: Optional[Dict[str, Any]] = None,
         data: Optional[Dict[str, Any]] = None,
-        headers: Optional[Dict[str, str]] = {"Content-Type": "application/json"}
+        headers: Optional[Dict[str, str]] = None
     ) -> Any:
         
         if path_param is not None:
