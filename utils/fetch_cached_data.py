@@ -6,18 +6,45 @@ import json
 
 def clear_cache():
     cache_data.clear()
+
+def get_content(endpoint):
+    api = APIClient()
+    res = api.request("GET", endpoint)
+    if res.get("error"):
+        return []
+    return res.get("response_content", {})
     
 @cache_data(show_spinner="Buscando dados...", max_entries=1)
 def fetch_capabilities() -> list[str]:
-    api = APIClient()
-    res = api.request("GET", "/catalog/capabilities")
-    content = res.get("response_content", {})
+    content = get_content("/catalog/capabilities")
     
     if "capabilities" in content:
         capabilities = content["capabilities"] 
-        names = [capability["name"] for capability in capabilities if "name" in capability]
+        names = [capability["name"] for capability in capabilities]
         return names
     return []
+
+@cache_data(show_spinner="Buscando dados...", max_entries=1)
+def fetch_capabilities_from_resource(uuid:str) -> list[str]:
+    content = get_content("/catalog/resources/"+uuid)
+    data = content["data"]
+
+    if "capabilities" in data:
+        names = data["capabilities"]
+        return names
+    return []
+
+@cache_data(show_spinner="Buscando dados...", max_entries=1)
+def fetch_all_resources() -> dict | None:
+    content = get_content("/catalog/resources")
+    
+    if "resources" in content:
+        resources = content["resources"]
+        uuids = {}
+        for resource in resources:
+            uuids[resource["uuid"]] = resource["description"]
+        return uuids
+    return None
 
 @cache_data(
     show_spinner="Buscando dados...",
@@ -27,11 +54,10 @@ def fetch_capabilities() -> list[str]:
 })
 def request(
     method: str, 
-    endpoint:str, 
-    path_param: str = None,
+    endpoint:str,
     params: Optional[Dict[str, Any]] = None,
     data: Optional[Dict[str, Any]] = None,
     headers: Optional[Dict[str, str]] = None
 ):
     api = APIClient()
-    return api.request(method, endpoint, path_param,params, data, headers)
+    return api.request(method, endpoint,params, data, headers)

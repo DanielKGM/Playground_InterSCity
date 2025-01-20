@@ -2,12 +2,12 @@ import streamlit as st
 from utils.fetch_cached_data import request
 from typing import Dict
 from utils.http_container import http_container
-from utils.fetch_cached_data import request
+import re
 
 
 class CataloguerService():
     def __init__(self, lista_capacidades: list = None):
-        self.lista_capacidades = lista_capacidades if lista_capacidades is not None else []
+        self.lista_capacidades = lista_capacidades
         self.action_map = {
             "Criar um recurso": {
                 "endpoint": "/catalog/resources",
@@ -140,7 +140,8 @@ class CataloguerService():
         )
 
         action = self.action_map[action_name]
-        http_cont = st.html(http_container(action["method"], action["endpoint"]))
+        endpoint = action["endpoint"]
+        http_cont = st.html(http_container(action["method"],endpoint))
 
         with st.form(key, border= False, enter_to_submit= False):
             path_param = None
@@ -150,17 +151,18 @@ class CataloguerService():
             params = action["params"]() if action.get("params") else None
 
             if st.form_submit_button("Enviar ╰┈➤",use_container_width= True):
+                if path_param:
+                    endpoint = re.sub(r"\{(\w+)\}", path_param, endpoint)
                 st.toast("Comunicando-se com a API...", icon= ":material/hourglass_empty:")
 
                 response = request(
-                                action["method"],
-                                action["endpoint"], 
-                                path_param, 
-                                params, 
-                                data,
-                                {"Content-Type": "application/json"}
+                                method=action["method"],
+                                endpoint=endpoint,
+                                params=params, 
+                                data=data,
+                                headers={"Content-Type": "application/json"}
                             )
-                http_cont.html(http_container(action["method"],action["endpoint"],data, params))
+                http_cont.html(http_container(action["method"],endpoint,data, params))
                 
                 if response.get("error"):
                     st.toast(f'{response["error"]} ({response["status_code"]})', icon=":material/sentiment_dissatisfied:")

@@ -1,6 +1,5 @@
 import requests
 from typing import Any, Dict, Optional
-import re
 from enum import Enum
 
 
@@ -27,15 +26,10 @@ class APIClient:
         self,
         method: str,
         endpoint: str,
-        path_param: str = None,
         params: Optional[Dict[str, Any]] = None,
         data: Optional[Dict[str, Any]] = None,
         headers: Optional[Dict[str, str]] = None
     ) -> Any:
-        
-        if path_param is not None:
-            endpoint = re.sub(r"\{(\w+)\}", path_param, endpoint)
-
         url = f'{self.base_url}{endpoint}'
 
         try:

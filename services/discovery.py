@@ -7,7 +7,7 @@ from utils.fetch_cached_data import request
 
 class DiscoveryService():
     def __init__(self, lista_capacidades: list = None):
-        self.lista_capacidades = lista_capacidades if lista_capacidades is not None else []
+        self.lista_capacidades = lista_capacidades
         self.operacoes_map = {
             "=":"eq",
             "!=":"ne",
@@ -48,7 +48,7 @@ class DiscoveryService():
     def search_fields(self):
         st.html('''<p style="margin-top:2px; margin-bottom:-10px; font-size:0.9rem;">Capacidades</p>''')
         caps = st.data_editor(
-                    data=[{"Capacidade":"","Operação":"","Valor":""}],
+                    data=[{"Capacidade": None,"Operação": None,"Valor": None}],
                     column_config={
                         "Capacidade": st.column_config.SelectboxColumn(
                             options=self.lista_capacidades,
