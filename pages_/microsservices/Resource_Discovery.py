@@ -6,4 +6,5 @@ from utils.playground_template import generate_playground
 discovery = DiscoveryService(lista_capacidades=fetch_capabilities())
 generate_playground(service=discovery, 
                     title="Resource Discovery",
+                    markdown_path="./static/discovery.md"
                     )

@@ -60,7 +60,8 @@ class CollectorService():
                 end_day = st.date_input("Fim do intervalo",format="YYYY-MM-DD", value = None)
                 end_hour = st.time_input("aas",label_visibility="collapsed", value=None)
             
-            start_date, end_date = f"{start_day}T{start_hour}", f"{end_day}T{end_hour}"
+            if start_date and end_date and start_hour and end_hour:
+                start_date, end_date = f"{start_day}T{start_hour}", f"{end_day}T{end_hour}"
         
         uuids = st.multiselect("Recursos (uuids)", 
                     self.lista_recursos,

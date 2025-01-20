@@ -7,4 +7,5 @@ from utils.playground_template import generate_playground
 adaptor = AdaptorService(lista_capacidades=fetch_capabilities(), lista_recursos= fetch_all_resources())
 generate_playground(service=adaptor, 
                     title="Resource Adaptor",
+                    markdown_path= "./static/adaptor.md"
                     )

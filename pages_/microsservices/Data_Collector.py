@@ -6,6 +6,6 @@ from utils.playground_template import generate_playground
 
 collector = CollectorService(lista_capacidades=fetch_capabilities(), lista_recursos=fetch_all_resources())
 generate_playground(service=collector, 
-                    markdown_path="./static/catalog.md",
+                    markdown_path="./static/collector.md",
                     title="Data Collector",
                     )
