@@ -23,6 +23,7 @@ def generate_playground(service: any, title:str, markdown_path:str = None):
                     "center": True,
                     "progress": False,
                     "maxScale": 3, 
+                    "controlsLayout": 'bottom-right',
                     "margin": 0.1, 
                     "plugins": ["highlight"]
                     }, 
@@ -44,7 +45,7 @@ def generate_playground(service: any, title:str, markdown_path:str = None):
     with col2:
         st.button("Limpar Cache", help="Pode ajudar a resolver problemas na aplicação", on_click= clear_cache,type= "tertiary", icon=":material/restart_alt:", use_container_width= True)
 
-    response = service.form(title + "_pg")
+    response = service.form("playground")
 
     st.subheader("Resposta da API")
     if response is None:

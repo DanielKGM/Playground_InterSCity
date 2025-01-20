@@ -27,16 +27,16 @@ class AdaptorService():
             return formatted_data
     
     def data_fields(self, resource_caps: list, unica: bool = False):
-        columns = {"Capacidade": None,"Valor": None, "Timestamp": None}
+        columns = {"Capacidade": None,"Value": None, "Timestamp": None}
         if unica:
             columns.pop("Capacidade",None)
         
         caps = st.data_editor(
             data=[columns],
             column_config={
-                "Capacidade": st.column_config.SelectboxColumn(options=resource_caps),
-                "Timestamp": st.column_config.DatetimeColumn(),
-                "Valor": st.column_config.TextColumn()
+                "Capacidade": st.column_config.SelectboxColumn(options=resource_caps, required= True),
+                "Timestamp": st.column_config.DatetimeColumn(required= True, label="Timestamp",help="Momento em que os dados foram capturados"),
+                "Valor": st.column_config.NumberColumn(format="%d",required=True)
             },
             num_rows="dynamic",
             use_container_width=True,

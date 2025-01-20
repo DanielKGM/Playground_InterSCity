@@ -7,3 +7,8 @@ font="sans serif"
 
 [client]
 showErrorDetails = "none"
+toolbarMode = "minimal"
+showSidebarNavigation = false
+
+[server]
+runOnSave = true
