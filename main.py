@@ -31,6 +31,13 @@ def get_slide(markdown_path:str):
     except FileNotFoundError:
         return None
 
+# Initialize a session state variable that tracks the sidebar state (either 'expanded' or 'collapsed').
+if 'sidebar_state' not in st.session_state:
+    st.session_state.sidebar_state = 'collapsed'
+
+# Streamlit set_page_config method has a 'initial_sidebar_state' argument that controls sidebar state.
+st.set_page_config(initial_sidebar_state=st.session_state.sidebar_state)
+
 pages = {
     "InterSCity": [
         st.Page("./pages_/interscity/Introducao.py", title="Introdução", icon="🌐", default=True)
