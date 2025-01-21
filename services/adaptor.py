@@ -27,7 +27,7 @@ class AdaptorService():
             return formatted_data
     
     def data_fields(self, resource_caps: list, unica: bool = False):
-        columns = {"Capacidade": None,"Value": None, "Timestamp": None}
+        columns = {"Capacidade": None,"Valor": None, "Timestamp": None}
         if unica:
             columns.pop("Capacidade",None)
         
