@@ -1,11 +1,35 @@
 import streamlit as st
+from pathlib import Path
+import reveal_slides as rs
 
 
-if 'sidebar_state' in st.session_state:
-    st.set_page_config(initial_sidebar_state=st.session_state.sidebar_state)
-else:
-    st.set_page_config(initial_sidebar_state="collapsed")
-    st.session_state.sidebar_state = 'collapsed'
+@st.fragment
+def get_slide(markdown_path:str):
+    st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
+
+    try:
+        st.caption(r"""Pressione `F` para ler os slides em tela cheia""")
+        return rs.slides(Path(markdown_path).read_text(encoding="UTF-8"), 
+        height=500, 
+        theme="moon",
+        config={
+                "transition": "slide",
+                "width": 1000,
+                "height": 1000, 
+                "minScale": 0.1, 
+                "center": True,
+                "progress": False,
+                "maxScale": 3, 
+                "controlsLayout": 'bottom-right',
+                "margin": 0, 
+                "plugins": ["highlight"]
+                },
+        markdown_props={"data-separator-vertical":"^--$"},
+        key="foo",
+        display_only= True
+        )
+    except FileNotFoundError:
+        return None
 
 pages = {
     "InterSCity": [
@@ -19,7 +43,13 @@ pages = {
     ]
 }
 
-st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
+presentations = {
+    "Introdução":"./static/introducao.md",
+    "Resource Catalog":"./static/catalog.md",
+    "Resource Discovery":"./static/discovery.md",
+    "Resource Adaptor":"./static/adaptor.md",
+    "Data Collector":"./static/collector.md"
+}
 
 pg = st.navigation(pages, position="hidden")
 
@@ -53,5 +83,16 @@ with st.sidebar:
     st.page_link("https://colab.research.google.com/drive/1ztdIMDvVSyWk3VTKXAX7NL6ek7IUs6mc?usp=sharing#scrollTo=i9vY2kxt-kWq",
                 label="Exemplo de uso",
                 icon=link_icon)
+
+if pg.title != "Introdução":
+    st.header(pg.title)
+st.session_state.page = pg.title
+
+if pg.title in presentations:
+    get_slide(presentations[pg.title])
+else:
+    # NECESSÁRIO!
+    # POR ALGUM MOTIVO, RODAR O @ST.FRAGMENT QUEBRA ST.LOGO's QUE ESTEJAM FORA DELE
+    st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
 
 pg.run()

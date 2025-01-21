@@ -4,7 +4,4 @@ from utils.playground_template import generate_playground
 
 
 cataloguer = CataloguerService(lista_capacidades=fetch_capabilities())
-generate_playground(service=cataloguer,
-                    title="Resource Catalog",
-                    markdown_path="./static/catalog.md"
-                    )
+generate_playground(service=cataloguer)

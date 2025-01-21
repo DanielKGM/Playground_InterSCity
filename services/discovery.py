@@ -57,7 +57,7 @@ class DiscoveryService():
                         "Operação": st.column_config.SelectboxColumn(
                             options=self.operacoes_map.keys()
                             ),
-                        "Valor": st.column_config.TextColumn()
+                        "Valor": st.column_config.NumberColumn(format="%d")
                     },
                     num_rows="dynamic",
                     use_container_width= True,
