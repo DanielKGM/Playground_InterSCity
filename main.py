@@ -6,10 +6,7 @@ from config import get_base_url
 
 
 
-@st.fragment
 def get_slide(markdown_path:str):
-    st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
-
     try:
         st.caption(r"""Pressione `F` para ler os slides em tela cheia""")
         return rs.slides(Path(markdown_path).read_text(encoding="UTF-8"), 
@@ -110,13 +107,7 @@ with st.sidebar:
 
 if pg.title != "Introdução":
     st.header(pg.title)
+
 st.session_state.page = pg.title
-
-if pg.title in presentations:
-    get_slide(presentations[pg.title])
-else:
-    # NECESSÁRIO!
-    # POR ALGUM MOTIVO, RODAR O @ST.FRAGMENT QUEBRA ST.LOGO's QUE ESTEJAM FORA DELE
-    st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
-
+get_slide(presentations[pg.title])
 pg.run()
