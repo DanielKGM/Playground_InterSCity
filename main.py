@@ -2,6 +2,7 @@ import streamlit as st
 from pathlib import Path
 import reveal_slides as rs
 import validators
+from config import get_base_url
 
 
 
@@ -98,7 +99,7 @@ with st.sidebar:
     url_input = st.sidebar.text_input(
         "URL Base da API",
         label_visibility="collapsed",
-        value="https://192.168.10.104"
+        value=get_base_url()
     )
 
     if not validators.url(url_input):

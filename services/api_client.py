@@ -1,6 +1,6 @@
 import requests
 from typing import Any, Dict, Optional
-from config import get_base_url
+from config import get_base_url, get_timeout
 
 
 
@@ -38,7 +38,8 @@ class APIClient:
                 url=url,
                 params=params,
                 json=data,
-                headers=headers
+                headers=headers,
+                timeout=get_timeout()
             )
 
             # Se a resposta não for bem-sucedida, ela levanta uma exceção.
