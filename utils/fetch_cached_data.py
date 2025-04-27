@@ -1,22 +1,24 @@
 from services.api_client import APIClient
-from streamlit import cache_data
+from streamlit import cache_data, session_state
 from typing import Dict, Optional, Any
 import json
+from config import get_base_url
+
 
 
 def clear_cache():
     cache_data.clear()
 
-def get_content(endpoint):
-    api = APIClient()
+def get_content(endpoint, base_url):
+    api = APIClient(base_url)
     res = api.request("GET", endpoint)
     if res.get("error"):
         return []
     return res.get("response_content", {})
     
 @cache_data(show_spinner="Buscando dados...", max_entries=1)
-def fetch_capabilities() -> list[str]:
-    content = get_content("/catalog/capabilities")
+def fetch_capabilities(base_url: str = get_base_url()) -> list[str]:
+    content = get_content("/catalog/capabilities", base_url)
     
     if "capabilities" in content:
         capabilities = content["capabilities"] 
@@ -25,8 +27,8 @@ def fetch_capabilities() -> list[str]:
     return []
 
 @cache_data(show_spinner="Buscando dados...", max_entries=1)
-def fetch_capabilities_from_resource(uuid:str) -> list[str]:
-    content = get_content("/catalog/resources/"+uuid)
+def fetch_capabilities_from_resource(uuid:str, base_url: str = get_base_url()) -> list[str]:
+    content = get_content("/catalog/resources/"+uuid, base_url)
     data = content["data"]
 
     if "capabilities" in data:
@@ -35,8 +37,8 @@ def fetch_capabilities_from_resource(uuid:str) -> list[str]:
     return []
 
 @cache_data(show_spinner="Buscando dados...", max_entries=1)
-def fetch_all_resources() -> dict | None:
-    content = get_content("/catalog/resources")
+def fetch_all_resources(base_url: str = get_base_url()) -> dict | None:
+    content = get_content("/catalog/resources", base_url)
     
     if "resources" in content:
         resources = content["resources"]
@@ -57,7 +59,8 @@ def request(
     endpoint:str,
     params: Optional[Dict[str, Any]] = None,
     data: Optional[Dict[str, Any]] = None,
-    headers: Optional[Dict[str, str]] = None
+    headers: Optional[Dict[str, str]] = None,
+    base_url: str = get_base_url()
 ):
-    api = APIClient()
+    api = APIClient(base_url=base_url)
     return api.request(method, endpoint,params, data, headers)

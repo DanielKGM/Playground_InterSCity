@@ -1,11 +1,11 @@
 import requests
 from typing import Any, Dict, Optional
-from enum import Enum
+from config import get_base_url
 
 
 
 class APIClient:
-    def __init__(self, base_url: str = 'https://cidadesinteligentes.lsdi.ufma.br/interscity_lh'):
+    def __init__(self, base_url: str = get_base_url()):
         self.base_url = base_url
 
         self.error_messages = {

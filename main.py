@@ -1,6 +1,8 @@
 import streamlit as st
 from pathlib import Path
 import reveal_slides as rs
+import validators
+
 
 
 @st.fragment
@@ -90,6 +92,20 @@ with st.sidebar:
     st.page_link("https://colab.research.google.com/drive/1ztdIMDvVSyWk3VTKXAX7NL6ek7IUs6mc?usp=sharing#scrollTo=i9vY2kxt-kWq",
                 label="Exemplo de uso",
                 icon=link_icon)
+    
+    st.markdown("**API**", help="Endereço o qual as requisições da API serão feitas")
+
+    url_input = st.sidebar.text_input(
+        "URL Base da API",
+        label_visibility="collapsed",
+        value="https://192.168.10.104"
+    )
+
+    if not validators.url(url_input):
+        st.sidebar.error("URL inválida!")
+    else:
+        st.session_state["base_url"] = url_input
+
 
 if pg.title != "Introdução":
     st.header(pg.title)

@@ -1,3 +1,4 @@
 streamlit
 requests
 streamlit-reveal-slides
+validators

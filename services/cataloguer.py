@@ -2,6 +2,7 @@ import streamlit as st
 from utils.fetch_cached_data import request
 from typing import Dict
 from utils.http_container import http_container
+from config import get_base_url
 import re
 
 
@@ -160,7 +161,8 @@ class CataloguerService():
                                 endpoint=endpoint,
                                 params=params, 
                                 data=data,
-                                headers={"Content-Type": "application/json"}
+                                headers={"Content-Type": "application/json"},
+                                base_url=get_base_url()
                             )
                 http_cont.html(http_container(action["method"],endpoint,data, params))
                 

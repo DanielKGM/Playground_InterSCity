@@ -3,6 +3,7 @@ from utils.fetch_cached_data import request
 from typing import Dict
 from utils.http_container import http_container
 from utils.fetch_cached_data import request
+from config import get_base_url
 
 
 class DiscoveryService():
@@ -94,7 +95,8 @@ class DiscoveryService():
                 response = request(
                                 method, 
                                 endpoint, 
-                                params= params
+                                params= params,
+                                base_url= get_base_url()
                             )
                 http_cont.html(http_container(method,endpoint, params=params))
                 if response.get("error"):

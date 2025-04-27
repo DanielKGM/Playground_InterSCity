@@ -2,6 +2,7 @@ import streamlit as st
 from utils.fetch_cached_data import request
 from utils.http_container import http_container
 from utils.fetch_cached_data import fetch_capabilities_from_resource
+from config import get_base_url
 
 
 class AdaptorService():
@@ -60,7 +61,7 @@ class AdaptorService():
         if not uuid:
             return None
 
-        resource_caps = fetch_capabilities_from_resource(uuid)
+        resource_caps = fetch_capabilities_from_resource(uuid, base_url= get_base_url())
         if resource_caps == []:
             st.info("O recurso selecionado não possui capacidades")
             return None
@@ -86,7 +87,8 @@ class AdaptorService():
                 response = request(
                                 method, 
                                 endpoint, 
-                                data= data
+                                data= data,
+                                base_url= get_base_url()
                             )
                 http_cont.html(http_container(method,endpoint, content=data))
                 if response.get("error"):
