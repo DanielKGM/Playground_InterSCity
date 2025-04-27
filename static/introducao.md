@@ -27,7 +27,7 @@ Plataforma de Cidades Inteligentes
   </div>
 </div>
 ---
-<img src="https://raw.githubusercontent.com/DanielKGM/Playground_InterSCity/2d6dfde6182629502fe5157d20a1d46641f7f875/static/presentation_media/cidade_comunicam.svg" alt="cidades_comunicando" width="700"/>
+<img src="https://raw.githubusercontent.com/DanielKGM/Playground_InterSCity/56a291960f564867db09e96c243cfb47c869ac7f/static/presentation_media/cidade_comunicam.svg" alt="cidades_comunicando" width="700"/>
 
 > As futuras cidades inteligentes exigirão uma `infraestrutura de TIC unificada` para compartilhar adequadamente seus recursos, em vez de depender de soluções não integradas (<a target="_blank" href="https://www.researchgate.net/publication/261430626_Civitas_The_Smart_City_Middleware_from_Sensors_to_Big_Data">Villanueva et al., 2013</a>)
 ---
