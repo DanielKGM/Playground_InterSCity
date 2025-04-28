@@ -12,7 +12,7 @@ def get_slide(markdown_path:str):
 
     try:
         st.caption(r"""Pressione `F` para ler os slides em tela cheia""")
-        rs.slides(Path(markdown_path).read_text(encoding="UTF-8"), 
+        return rs.slides(Path(markdown_path).read_text(encoding="UTF-8"), 
         height=500, 
         theme="moon",
         config={
@@ -31,9 +31,6 @@ def get_slide(markdown_path:str):
         key="foo",
         display_only= True
         )
-        if st.session_state["last_presentation"] != markdown_path:
-            st.rerun(scope="fragment")
-            st.write(markdown_path)
     except FileNotFoundError:
         return None
 
@@ -113,11 +110,12 @@ with st.sidebar:
 
 if pg.title != "Introdução":
     st.header(pg.title)
+
 st.session_state.page = pg.title
 
 if pg.title in presentations:
-    st.session_state["last_presentation"] = presentations[pg.title]
-    get_slide(presentations[pg.title])
+    slide = get_slide(presentations[pg.title])
+    st.write(slide)
 else:
     # NECESSÁRIO!
     # POR ALGUM MOTIVO, RODAR O @ST.FRAGMENT QUEBRA ST.LOGO's QUE ESTEJAM FORA DELE
