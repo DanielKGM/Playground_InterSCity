@@ -4,7 +4,7 @@ pages_config = {
         {
             "path": "./pages_/interscity/Introducao.py",
             "title": "Introdução",
-            "icon": "🌐",
+            "icon": '🌐',
             "default": True
         }
     ],
@@ -12,22 +12,22 @@ pages_config = {
         {
             "path": "./pages_/microsservices/Resource_Catalog.py",
             "title": "Resource Catalog",
-            "icon": "🗃️"
+            "icon": '🗃️'
         },
         {
             "path": "./pages_/microsservices/Resource_Discovery.py",
             "title": "Resource Discovery",
-            "icon": "🔎"
+            "icon": '🔎'
         },
         {
             "path": "./pages_/microsservices/Resource_Adaptor.py",
             "title": "Resource Adaptor",
-            "icon": "🔁"
+            "icon": '🔁'
         },
         {
             "path": "./pages_/microsservices/Data_Collector.py",
             "title": "Data Collector",
-            "icon": "📈"
+            "icon": '📈'
         }
     ]
 }

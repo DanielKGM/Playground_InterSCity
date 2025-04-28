@@ -11,7 +11,7 @@ for section, pg_list in pages_config.items():
         st.Page(
             p["path"],
             title=p["title"],
-            icon=p["icon"],
+            icon=p.get("icon",'🌐'),
             default=p.get("default", False)
         )
         for p in pg_list
