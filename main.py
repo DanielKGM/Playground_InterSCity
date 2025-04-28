@@ -33,6 +33,7 @@ def get_slide(markdown_path:str):
         )
         if st.session_state["last_presentation"] != markdown_path:
             st.rerun(scope="fragment")
+            st.write(markdown_path)
     except FileNotFoundError:
         return None
 
