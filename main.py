@@ -1,38 +1,7 @@
 import streamlit as st
-from pathlib import Path
-import reveal_slides as rs
 import validators
 from config import get_base_url
 
-
-
-@st.fragment
-def get_slide(markdown_path:str):
-    st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
-
-    try:
-        st.caption(r"""Pressione `F` para ler os slides em tela cheia""")
-        return rs.slides(Path(markdown_path).read_text(encoding="UTF-8"), 
-        height=500, 
-        theme="moon",
-        config={
-                "transition": "slide",
-                "width": 1000,
-                "height": 1000, 
-                "minScale": 0.1, 
-                "center": True,
-                "progress": False,
-                "maxScale": 3, 
-                "controlsLayout": 'bottom-right',
-                "margin": 0, 
-                "plugins": ["highlight"]
-                },
-        markdown_props={"data-separator-vertical":"^--$"},
-        key="foo",
-        display_only= True
-        )
-    except FileNotFoundError:
-        return None
 
 # Initialize a session state variable that tracks the sidebar state (either 'expanded' or 'collapsed').
 if 'sidebar_state' not in st.session_state:
@@ -51,14 +20,6 @@ pages = {
         st.Page("./pages_/microsservices/Resource_Adaptor.py",title="Resource Adaptor", icon="🔁"),
         st.Page("./pages_/microsservices/Data_Collector.py", title = "Data Collector", icon= "📈")
     ]
-}
-
-presentations = {
-    "Introdução":"./static/introducao.md",
-    "Resource Catalog":"./static/catalog.md",
-    "Resource Discovery":"./static/discovery.md",
-    "Resource Adaptor":"./static/adaptor.md",
-    "Data Collector":"./static/collector.md"
 }
 
 pg = st.navigation(pages, position="hidden")
@@ -112,13 +73,5 @@ if pg.title != "Introdução":
     st.header(pg.title)
 
 st.session_state.page = pg.title
-
-if pg.title in presentations:
-    slide = get_slide(presentations[pg.title])
-    st.write(slide)
-else:
-    # NECESSÁRIO!
-    # POR ALGUM MOTIVO, RODAR O @ST.FRAGMENT QUEBRA ST.LOGO's QUE ESTEJAM FORA DELE
-    st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
-
+st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
 pg.run()
