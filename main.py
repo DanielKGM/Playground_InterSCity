@@ -8,7 +8,6 @@ from config import get_base_url
 
 @st.fragment
 def get_slide(markdown_path:str):
-    st.rerun(scope="fragment")
     st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
 
     try:
