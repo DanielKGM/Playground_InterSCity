@@ -8,9 +8,33 @@ from config import get_base_url
 
 @st.fragment
 def get_slide(markdown_path:str):
+    if st.session_state["last_presentation"] != markdown_path:
+        st.rerun(scope="fragment")
     st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
 
-    st.write(markdown_path)
+    try:
+        st.caption(r"""Pressione `F` para ler os slides em tela cheia""")
+        return rs.slides(Path(markdown_path).read_text(encoding="UTF-8"), 
+        height=500, 
+        theme="moon",
+        config={
+                "transition": "slide",
+                "width": 1000,
+                "height": 1000, 
+                "minScale": 0.1, 
+                "center": True,
+                "progress": False,
+                "maxScale": 3, 
+                "controlsLayout": 'bottom-right',
+                "margin": 0, 
+                "plugins": ["highlight"]
+                },
+        markdown_props={"data-separator-vertical":"^--$"},
+        key="foo",
+        display_only= True
+        )
+    except FileNotFoundError:
+        return None
 
 # Initialize a session state variable that tracks the sidebar state (either 'expanded' or 'collapsed').
 if 'sidebar_state' not in st.session_state:
@@ -91,6 +115,7 @@ if pg.title != "Introdução":
 st.session_state.page = pg.title
 
 if pg.title in presentations:
+    st.session_state["last_presentation"] = presentations[pg.title]
     get_slide(presentations[pg.title])
 else:
     # NECESSÁRIO!
