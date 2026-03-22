@@ -11,8 +11,8 @@ for section, pg_list in pages_config.items():
         st.Page(
             p["path"],
             title=p["title"],
-            icon=p.get("icon",'🌐'),
-            default=p.get("default", False)
+            icon=p.get("icon", "🌐"),
+            default=p.get("default", False),
         )
         for p in pg_list
     ]
@@ -21,14 +21,17 @@ pg = st.navigation(pages, position="hidden")
 
 with st.sidebar:
     render_menu()
-    
-    st.markdown("**API**", help="Endereço o qual as requisições da API serão feitas")
+
+    st.markdown(
+        "**API**",
+        help="Endereço da API para onde as requisições deste playground serão enviadas",
+    )
 
     url_input = st.sidebar.text_input(
         "URL Base da API",
         label_visibility="collapsed",
         value=get_base_url(),
-        key="input_api"
+        key="input_api",
     )
 
     if not validators.url(url_input):
@@ -40,5 +43,9 @@ if pg.title != "Introdução":
     st.header(pg.title)
 
 st.session_state.page = pg.title
-st.logo(image="./static/icon.svg",size="large",link="https://interscity.org/software/interscity-platform/")
+st.logo(
+    image="./static/icon.svg",
+    size="large",
+    link="https://interscity.org/software/interscity-platform/",
+)
 pg.run()
