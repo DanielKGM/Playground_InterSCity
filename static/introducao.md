@@ -1,6 +1,6 @@
 <img src="https://interscity.org/wp-content/themes/inct/assets/img/logo/interscity.svg" alt="drawing" width="2000"/>
 
-Plataforma de Cidades Inteligentes
+Introdução à Plataforma de Cidades Inteligentes
 
 ---
 ## O que é uma cidade inteligente?

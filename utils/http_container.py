@@ -1,15 +1,16 @@
-import streamlit as st
 import json
 from urllib.parse import urlencode  # Para gerar query strings
 
 
-def http_container(method: str, endpoint: str, content: dict = None, params: dict = None):
+def http_container(
+    method: str, endpoint: str, content: dict = None, params: dict = None
+):
     # Define cores para os métodos
     colors = {
-        "GET": "#28a745",       # Verde
-        "POST": "#007bff",      # Azul
-        "PUT": "#fb8500",       # Laranja
-        "DELETE": "#dc3545",    # Vermelho
+        "GET": "#28a745",  # Verde
+        "POST": "#007bff",  # Azul
+        "PUT": "#fb8500",  # Laranja
+        "DELETE": "#dc3545",  # Vermelho
     }
 
     main_color = colors.get(method.upper(), "#6c757d")
@@ -20,7 +21,7 @@ def http_container(method: str, endpoint: str, content: dict = None, params: dic
     query_string = ""
     if params:
         query_string = f"?{urlencode(params, doseq=True)}"
-    
+
     # Renderiza o JSON como string formatada
     content_html = ""
     if content:
