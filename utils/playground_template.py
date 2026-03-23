@@ -19,9 +19,9 @@ def generate_playground(service: any):
 
     request_info, response = service.form("playground")
 
-    st.subheader(
-        "Detalhes da Requisição",
-        help="Exibe a estrutura exata da requisição HTTP que será enviada, incluindo o método, a rota e os dados (payload) ou parâmetros.",
+    st.subheader("Detalhes da Requisição")
+    st.caption(
+        "Exibe um resumo da requisição HTTP que será enviada, incluindo o método, a rota e o payload."
     )
     if request_info:
         st.html(http_container(**request_info))
@@ -32,7 +32,9 @@ def generate_playground(service: any):
 
     st.subheader(
         "Resposta da API",
-        help="Mostra o retorno da API no formato JSON, exibindo os dados solicitados, confirmações ou mensagens de erro.",
+    )
+    st.caption(
+        "Mostra o retorno da API no formato JSON, exibindo os dados solicitados ou mensagens de retorno."
     )
     if response is None:
         st.info(

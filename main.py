@@ -3,7 +3,6 @@ import validators
 from config import get_base_url
 from utils.menu import render_menu, pages_config
 
-
 # transformação em st.Page para o st.navigation
 pages = {}
 for section, pg_list in pages_config.items():
