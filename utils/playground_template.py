@@ -17,11 +17,15 @@ def generate_playground(service: any):
             width="stretch",
         )
 
+    st.caption(
+        "Nem todos os campos são obrigatórios, preencha apenas o necessário para a sua requisição."
+    )
+
     request_info, response = service.form("playground")
 
     st.subheader("Detalhes da Requisição")
     st.caption(
-        "Exibe um resumo da requisição HTTP que será enviada, incluindo o método, a rota e o payload."
+        "Exibe um resumo da requisição HTTP que será enviada a partir do formulário, incluindo o método, a rota e o payload."
     )
     if request_info:
         st.html(http_container(**request_info))
@@ -33,9 +37,7 @@ def generate_playground(service: any):
     st.subheader(
         "Resposta da API",
     )
-    st.caption(
-        "Mostra o retorno da API no formato JSON, exibindo os dados solicitados ou mensagens de retorno."
-    )
+    st.caption("Mostra o retorno da API no formato JSON.")
     if response is None:
         st.info(
             "Aqui serão exibidos os resultados da sua requisição",

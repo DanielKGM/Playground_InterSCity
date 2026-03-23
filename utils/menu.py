@@ -8,7 +8,7 @@ pages_config = {
             "default": True,
         }
     ],
-    "Microsserviços": [
+    "Playgrounds": [
         {
             "path": "./pages_/microsservices/Resource_Catalog.py",
             "title": "Resource Catalog",
