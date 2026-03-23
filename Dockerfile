@@ -5,4 +5,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["sh", "-c", "streamlit run app.py ${PORT:+--server.port=$PORT} --server.address=0.0.0.0"]
+CMD ["sh", "-c", "streamlit run main.py ${PORT:+--server.port=$PORT} --server.address=0.0.0.0"]
