@@ -65,7 +65,7 @@ def render_menu():
         icon=link_icon,
     )
     st.page_link(
-        "https://colab.research.google.com/drive/1ztdIMDvVSyWk3VTKXAX7NL6ek7IUs6mc?usp=sharing#scrollTo=i9vY2kxt-kWq",
-        label="Exemplo de uso (Colab)",
+        "https://github.com/DanielKGM/estacionamento_inteligente",
+        label="Exemplo de Projeto",
         icon=":material/code:",
     )
